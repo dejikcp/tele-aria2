@@ -80,7 +80,7 @@ export default class Telegram {
         return next();
       }
 
-      return ctx.reply('You\'re not allowed to use this bot 😢.');
+      return ctx.reply('次机器人的作者是imkcp，你无权使用');
     });
   }
 
@@ -114,7 +114,7 @@ export default class Telegram {
     this.replyOnAria2ServerEvent('downloadPause', 'Download paused!');
     // Try to download some non-existing URL to triger this error. e.g. https://1992342346.xyz/qwq122312
     this.replyOnAria2ServerEvent('downloadError',
-      'A download error occured. ✅ Finished/Stopped menu for more details',
+      '发生下载错误。 ✅ Finished/Stopped 菜单了解更多详情',
     );
     this.replyOnAria2ServerEvent('downloadStop', 'Download stopped!'); // Calling aria2.remove can triger this event.
   }
@@ -129,7 +129,7 @@ export default class Telegram {
           `Speed: ${byte2Readable(Number(item.downloadSpeed), '/s')}`,
         ].join('\n'));
 
-        const message = parsed.join('\n\n') || 'No active download!';
+        const message = parsed.join('\n\n') || '没有主动下载！';
 
         ctx.reply(message);
       }
@@ -145,7 +145,7 @@ export default class Telegram {
           `Size: ${byte2Readable(Number(item.totalLength))}`,
         ].join('\n'));
 
-        const message = parsed.join('\n\n') || 'No waiting download!';
+        const message = parsed.join('\n\n') || '无需等待下载！';
 
         ctx.reply(message);
       }
@@ -169,7 +169,7 @@ export default class Telegram {
           return messageEntities.join('\n');
         });
 
-        const message = parsed.join('\n\n') || 'No finished or stopped downloads!';
+        const message = parsed.join('\n\n') || '没有完成或停止下载！';
 
         ctx.reply(message);
       }
@@ -281,22 +281,22 @@ export default class Telegram {
         this.logger.info(`Received message from Telegram: ${inComingText}`);
 
         switch (inComingText) {
-          case '⬇️ Downloading':
+          case '⬇️ 下载中':
             this.downloading(ctx);
             break;
-          case '⌛️ Waiting':
+          case '⌛️ 等待中':
             this.waiting(ctx);
             break;
-          case '✅ Finished/Stopped':
+          case '✅ 完成或停止':
             this.stopped(ctx);
             break;
-          case '⏸️ Pause task':
+          case '⏸️ 暂停任务':
             this.pause(ctx);
             break;
-          case '▶️ Resume task':
+          case '▶️ 恢复任务':
             this.resume(ctx);
             break;
-          case '❌ Remove task':
+          case '❌ 删除任务':
             this.remove(ctx);
             break;
           default:
@@ -342,16 +342,16 @@ export default class Telegram {
 
       switch (actionName) {
         case 'pause-task':
-          this.generalAction('pause', ctx);
+          this.generalAction('暂停', ctx);
           break;
         case 'resume-task':
-          this.generalAction('unpause', ctx);
+          this.generalAction('取消暂停', ctx);
           break;
         case 'remove-task':
-          this.generalAction('forceRemove', ctx);
+          this.generalAction('强制删除', ctx);
           break;
         default:
-          this.logger.warn(`No matched action for ${actionName}`);
+          this.logger.warn(`没有匹配的动作 ${actionName}`);
       }
     });
   }
@@ -371,8 +371,8 @@ export default class Telegram {
       ctx.replyWithMarkdown(
         'Please select an option',
         Markup.keyboard([
-          '⬇️ Downloading', '⌛️ Waiting', '✅ Finished/Stopped',
-          '⏸️ Pause task', '▶️ Resume task', '❌ Remove task',
+          '⬇️ 下载中', '⌛️ 等待中', '✅ 停止或暂停',
+          '⏸️ 暂停任务', '▶️ 恢复任务', '❌ 删除任务',
         ], { columns: 3 }).extra(),
       );
     });
